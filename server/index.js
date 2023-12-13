@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.get("/api/books", async (req, res) => {
     try{
-        const data = await Book.find({});
+        const data = await Book.find({}).limit(2);
         res.json(data);
     }catch(error){
         res.status(500).json({error: "An error occurred while fetching books"});
