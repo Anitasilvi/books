@@ -78,6 +78,25 @@ const storage = multer.diskStorage({
         res.status(500).json({error: "An error occurred while fetching books"});
     }
 });
+app.put("/api/books", upload.single("thumbnail"), async (req, res) => {
+    try{
+       const bookId = req.body.bookId;
+       const updateBook = {
+        title: req.body.title,
+        slug: req.body.slug,
+        stars: req.body.stars,
+        description: req.body.description,
+        category: req.body.category,
+       }
+       if (req.file){
+        updateBook.thumbnail = req.file.filename;
+       }
+        await Book.findByIdAndUpdate(bookId, updateBook);
+        res.json("Data Submitted");
+    }catch(error){
+        res.status(500).json({error: "An error occurred while fetching books"});
+    }
+});
 // app.post("/api/books", async (req, res) => {
 //     try{
 //        console.log(req.body);
