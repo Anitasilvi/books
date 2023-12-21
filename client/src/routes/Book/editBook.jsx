@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import NoImageSelected from "../../assets/no-image-selected.jpg";
 
 function editBook() {
+  const navigate = useNavigate();
   const urlSlug = useParams();
   const baseUrl = `http://localhost:8000/api/books/${urlSlug.slug}`;
   const [bookId, setBookId] = useState("");
@@ -73,6 +74,23 @@ function editBook() {
       setThumbnail(e.target.files[0]);
     }
   };
+  const removeBook = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/books/" + bookId,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) {
+        navigate("/books");
+        console.log("Book removed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <h1>Edit Book</h1>
@@ -82,6 +100,9 @@ function editBook() {
         excepturi, harum voluptates modi odit unde aliquam corporis deserunt
         quis dolores nulla omnis?
       </p>
+      <button onClick={removeBook} className="delete">
+        Delete Book
+      </button>
       {submitted ? (
         <p>Data submitted successfully</p>
       ) : (
